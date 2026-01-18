@@ -20,20 +20,46 @@
         label { font-size: 0.8rem; font-weight: 600; color: var(--text-muted); }
 
         .task-area { background: white; border: 2px solid var(--primary); padding: 25px; border-radius: 8px; margin-bottom: 15px; text-align: center; }
-        #task-name { font-size: 2rem; font-weight: bold; color: var(--primary-dark); margin: 10px 0; }
+        #task-name { font-size: 2.2rem; font-weight: bold; color: var(--primary-dark); margin: 10px 0; }
         
-        /* Formel Live Vorschau */
-        .formula-preview { font-family: "Times New Roman", serif; font-size: 3rem; margin: 20px 0; min-height: 4.5rem; color: #1e293b; background: #f8fafc; border-radius: 8px; display: flex; justify-content: center; align-items: center; border: 1px solid var(--border); }
-        sub { font-size: 0.55em; vertical-align: sub; line-height: 0; }
+        /* FORMEL ENGINE - PRÄZISE TIEFSTELLUNG */
+        .formula-preview { 
+            font-family: "Times New Roman", serif; 
+            font-size: 3.5rem; 
+            margin: 20px 0; 
+            min-height: 5rem; 
+            color: #1e293b; 
+            display: flex; 
+            justify-content: center; 
+            align-items: baseline; 
+            background: #fff;
+        }
+        .formula-preview sub { 
+            font-size: 0.5em; 
+            text-decoration: none;
+            vertical-align: -0.3em; /* Erzwingt Tiefe */
+            line-height: 0;
+        }
 
-        input#formula-input { width: 100%; max-width: 550px; padding: 15px; border: 2px solid var(--primary); border-radius: 8px; font-size: 1.4rem; text-align: center; outline: none; font-family: monospace; }
+        input#formula-input { 
+            width: 100%; 
+            max-width: 550px; 
+            padding: 15px; 
+            border: 2px solid var(--primary); 
+            border-radius: 8px; 
+            font-size: 1.5rem; 
+            text-align: center; 
+            outline: none; 
+            font-family: 'Courier New', monospace; 
+            letter-spacing: 2px;
+        }
         
         .action-bar { display: flex; gap: 10px; justify-content: flex-end; background: #f1f5f9; padding: 15px; border-radius: 8px; margin-top: 20px; }
-        button { padding: 12px 24px; border-radius: 8px; border: none; cursor: pointer; font-weight: bold; font-size: 1rem; }
+        button { padding: 12px 24px; border-radius: 8px; border: none; cursor: pointer; font-weight: 800; font-size: 1rem; }
         #check-btn { background: var(--primary); color: white; }
-        #next-btn { background: white; color: var(--primary); border: 1px solid var(--primary); }
+        #next-btn { background: white; color: var(--primary); border: 2px solid var(--primary); }
 
-        .feedback { min-height: 40px; padding: 10px; border-radius: 8px; margin-top: 15px; font-weight: bold; text-align: center; }
+        .feedback { min-height: 40px; padding: 10px; border-radius: 8px; margin-top: 10px; font-weight: bold; text-align: center; }
         .solution-box { background: #f0fdf4; border: 1px solid #bbf7d0; padding: 20px; border-radius: 8px; margin-top: 15px; display: none; text-align: center; }
         
         .admin-grid { display: grid; grid-template-columns: 1fr 1fr; gap: 20px; margin-top: 10px; }
@@ -45,10 +71,10 @@
 
 <div class="app-container">
     <header>
-        <h1>Formel-Master: Vom Namen zur Formel</h1>
+        <h1>Formel-Master: Name &rarr; Formel</h1>
         <div class="stats-bar">
             <div>Richtig: <span id="score">0</span></div>
-            <div>Gesamt: <span id="total">0</span></div>
+            <div>Stapel: <span id="deck-info">0</span></div>
         </div>
     </header>
 
@@ -56,27 +82,27 @@
         <div class="control-group">
             <label>Niveau</label>
             <select id="level-select" onchange="resetAndGenerate()">
-                <option value="s1">Sek I (Auswahl)</option>
+                <option value="s1">Sek I (Anfänger)</option>
                 <option value="s2" selected>Sek II (Alle Ionen)</option>
             </select>
         </div>
         <div class="control-group">
-            <label>Eingabe-Hilfe</label>
-            <div style="font-size: 0.75rem; color: var(--text-muted);">Zahlen werden automatisch tiefgestellt.</div>
+            <label>Info</label>
+            <div style="font-size: 0.75rem; color: var(--text-muted);">Nutze Klammern bei mehratomigen Ionen, z.B. (SO4)2</div>
         </div>
     </div>
 
     <div class="task-area">
-        <div style="color:var(--text-muted);">Schreibe die Formel für:</div>
-        <div id="task-name">Lade...</div>
+        <div style="color:var(--text-muted); font-size: 0.9rem;">Schreibe die Formel für:</div>
+        <div id="task-name">Initialisiere...</div>
         <div id="live-formula" class="formula-preview"></div>
-        <input type="text" id="formula-input" placeholder="z.B. Al2(SO4)3" autocomplete="off" oninput="updateLive()">
+        <input type="text" id="formula-input" placeholder="z.B. Zn3(PO4)2" autocomplete="off" oninput="updateLive()">
     </div>
 
     <div id="feedback" class="feedback"></div>
     <div id="solution-box" class="solution-box">
-        <strong>Korrekte Formel:</strong><br>
-        <span id="sol-formula" style="font-family:'Times New Roman', serif; font-size:2.5rem;"></span>
+        <strong>Korrekte chemische Formel:</strong><br>
+        <span id="sol-formula" style="font-family:'Times New Roman', serif; font-size:2.8rem;"></span>
     </div>
 
     <div class="action-bar">
@@ -85,7 +111,7 @@
     </div>
 
     <details style="margin-top:30px; border-top:1px dashed #ccc; padding-top:15px;">
-        <summary style="cursor:pointer; color:var(--text-muted); font-weight:bold;">Lehrer-Bereich: Ionen & SEK I Auswahl</summary>
+        <summary style="cursor:pointer; color:var(--text-muted); font-weight:bold;">Lehrer-Bereich: SEK I Auswahl & Ionen</summary>
         <div class="admin-grid">
             <div><label>Kationen (An | S1)</label><div id="cat-list" class="ion-list"></div></div>
             <div><label>Anionen (An | S1)</label><div id="an-list" class="ion-list"></div></div>
@@ -97,12 +123,12 @@
     // --- DATENBASIS ---
     const CATIONS = [
         { f:"Li", h:"Li", ch:1, n:"Lithium-Ion", e:1, s1:1 }, { f:"Na", h:"Na", ch:1, n:"Natrium-Ion", e:1, s1:1 }, { f:"K", h:"K", ch:1, n:"Kalium-Ion", e:1, s1:1 },
-        { f:"NH4", h:"NH4", ch:1, n:"Ammonium-Ion", poly:1, e:1, s1:0 }, { f:"Ag", h:"Ag", ch:1, n:"Silber-Ion", e:1, s1:0 },
+        { f:"NH4", h:"NH<sub>4</sub>", ch:1, n:"Ammonium-Ion", poly:1, e:1, s1:0 }, { f:"Ag", h:"Ag", ch:1, n:"Silber-Ion", e:1, s1:0 },
         { f:"Cu", h:"Cu", ch:1, n:"Kupfer(I)-Ion", r:"I", e:1, s1:0 }, { f:"Mg", h:"Mg", ch:2, n:"Magnesium-Ion", e:1, s1:1 },
         { f:"Ca", h:"Ca", ch:2, n:"Calcium-Ion", e:1, s1:1 }, { f:"Ba", h:"Ba", ch:2, n:"Barium-Ion", e:1, s1:0 },
-        { f:"Fe", h:"Fe", ch:2, n:"Eisen(II)-Ion", r:"II", e:1, s1:1 }, { f:"Cu", h:"Cu", ch:2, n:"Kupfer(II)-Ion", r:"II", e:1, s1:1 },
+        { f:"Fe", h:"Fe", ch:2, n:"Eisen(II)-Ion", r:"II", e:1, s1:1 }, { f:"Cu", h:"Cu", ch:2, n:"Kupfer(II)-Ion", r:"II", e:1, s1:0 },
         { f:"Cu", h:"Cu", ch:2, n:"Kupfer-Ion", e:1, s1:1 }, // Ihr SEK 1 Spezialfall
-        { f:"Zn", h:"Zn", ch:2, n:"Zink-Ion", e:1, s1:0 }, { f:"Pb", h:"Pb", ch:2, n:"Blei(II)-Ion", r:"II", e:1, s1:0 },
+        { f:"Zn", h:"Zn", ch:2, n:"Zink-Ion", e:1, s1:1 }, { f:"Pb", h:"Pb", ch:2, n:"Blei(II)-Ion", r:"II", e:1, s1:0 },
         { f:"Al", h:"Al", ch:3, n:"Aluminium-Ion", e:1, s1:1 }, { f:"Fe", h:"Fe", ch:3, n:"Eisen(III)-Ion", r:"III", e:1, s1:1 },
         { f:"Cr", h:"Cr", ch:3, n:"Chrom(III)-Ion", r:"III", e:1, s1:0 }, { f:"Pb", h:"Pb", ch:4, n:"Blei(IV)-Ion", r:"IV", e:1, s1:0 },
         { f:"Sn", h:"Sn", ch:4, n:"Zinn(IV)-Ion", r:"IV", e:1, s1:0 }, { f:"U", h:"U", ch:6, n:"Uran(VI)-Ion", r:"VI", e:1, s1:0 }
@@ -111,17 +137,16 @@
     const ANIONS = [
         { f:"F", h:"F", ch:1, n:"Fluorid-Ion", e:1, s1:1 }, { f:"Cl", h:"Cl", ch:1, n:"Chlorid-Ion", e:1, s1:1 }, { f:"Br", h:"Br", ch:1, n:"Bromid-Ion", e:1, s1:1 },
         { f:"I", h:"I", ch:1, n:"Iodid-Ion", e:1, s1:1 }, { f:"OH", h:"OH", ch:1, n:"Hydroxid-Ion", poly:1, e:1, s1:1 },
-        { f:"NO3", h:"NO3", ch:1, n:"Nitrat-Ion", poly:1, e:1, s1:1 }, { f:"O", h:"O", ch:2, n:"Oxid-Ion", e:1, s1:1 },
-        { f:"S", h:"S", ch:2, n:"Sulfid-Ion", e:1, s1:1 }, { f:"SO4", h:"SO4", ch:2, n:"Sulfat-Ion", poly:1, e:1, s1:1 },
-        { f:"CO3", h:"CO3", ch:2, n:"Carbonat-Ion", poly:1, e:1, s1:1 }, { f:"PO4", h:"PO4", ch:3, n:"Phosphat-Ion", poly:1, e:1, s1:0 },
-        { f:"Cr2O7", h:"Cr2O7", ch:2, n:"Dichromat-Ion", poly:1, e:1, s1:0 }
+        { f:"NO3", h:"NO<sub>3</sub>", ch:1, n:"Nitrat-Ion", poly:1, e:1, s1:1 }, { f:"O", h:"O", ch:2, n:"Oxid-Ion", e:1, s1:1 },
+        { f:"S", h:"S", ch:2, n:"Sulfid-Ion", e:1, s1:1 }, { f:"SO4", h:"SO<sub>4</sub>", ch:2, n:"Sulfat-Ion", poly:1, e:1, s1:1 },
+        { f:"CO3", h:"CO<sub>3</sub>", ch:2, n:"Carbonat-Ion", poly:1, e:1, s1:1 }, { f:"PO4", h:"PO<sub>4</sub>", ch:3, n:"Phosphat-Ion", poly:1, e:1, s1:0 },
+        { f:"Cr2O7", h:"Cr<sub>2</sub>O<sub>7</sub>", ch:2, n:"Dichromat-Ion", poly:1, e:1, s1:0 }
     ];
 
     let current = null, score = 0, total = 0, deck = [];
 
     const getGCD = (a, b) => b ? getGCD(b, a % b) : a;
 
-    // Hilfsfunktion zur Darstellung von Tiefstellungen in der Live-Vorschau
     function formatSubscripts(text) {
         return text.replace(/(\d+)/g, '<sub>$1</sub>');
     }
@@ -146,34 +171,29 @@
     function generate() {
         if (deck.length === 0) refillDeck();
         current = deck.pop();
-        
-        // Mathematisches Verhältnis berechnen
         const common = getGCD(current.cat.ch, current.an.ch);
         const reqC = current.an.ch / common;
         const reqA = current.cat.ch / common;
 
-        // Korrekten Namen für die Aufgabe generieren
         let stemC = current.cat.n.replace('-Ion', '');
         let stemA = current.an.n.replace('-Ion', '').toLowerCase();
         let taskName = current.cat.r ? `${stemC}-${stemA}` : `${stemC}${stemA}`;
         if (stemA === "hydroxid" || stemA === "oxid") taskName = `${stemC}${stemA}`;
-        
         document.getElementById('task-name').innerText = taskName;
 
-        // Korrekte Formel-Lösung generieren (für den Vergleich)
-        function buildFormulaString(ion, count) {
+        function buildFormulaText(ion, count) {
             let base = ion.f;
             if (ion.poly && count > 1) base = "(" + base + ")";
             return base + (count > 1 ? count : "");
         }
-        current.correctFormula = buildFormulaString(current.cat, reqC) + buildFormulaString(current.an, reqA);
+        current.correctFormula = buildFormulaText(current.cat, reqC) + buildFormulaText(current.an, reqA);
 
-        // UI Reset
         document.getElementById('solution-box').style.display = 'none';
         document.getElementById('feedback').innerText = '';
         document.getElementById('feedback').style.background = 'none';
         document.getElementById('formula-input').value = '';
         document.getElementById('live-formula').innerHTML = '';
+        document.getElementById('deck-info').innerText = deck.length;
         document.getElementById('formula-input').focus();
     }
 
@@ -182,9 +202,6 @@
     function check() {
         if (!current) return;
         const uInput = document.getElementById('formula-input').value.trim();
-        
-        // Vergleich: Wir entfernen keine Groß/Kleinschreibung, da Chemie case-sensitive ist!
-        // Aber wir sind kulant bei Leerzeichen.
         const isCorrect = (uInput === current.correctFormula);
 
         total++;
@@ -192,7 +209,12 @@
             score++;
             showFB("Richtig! ✨", "var(--success)");
         } else {
-            showFB("Leider falsch.", "var(--error)");
+            // Didaktischer Hinweis bei fehlenden Klammern
+            if (!uInput.includes('(') && current.correctFormula.includes('(')) {
+                showFB("Falsch. Tipp: Nutze Klammern für komplexe Ionen!", "var(--error)");
+            } else {
+                showFB("Leider falsch.", "var(--error)");
+            }
         }
 
         document.getElementById('sol-formula').innerHTML = formatSubscripts(current.correctFormula);
